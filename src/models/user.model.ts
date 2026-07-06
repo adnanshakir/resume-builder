@@ -1,0 +1,45 @@
+import { IUser } from "@/types/user.types";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
+let userSchema = new mongoose.Schema<IUser>(
+  {
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "Name is required"],
+    },
+    email: {
+      type: String,
+      trim: true,
+      required: [true, "Email is required"],
+      unique: [true, "Email already exists"],
+    },
+    password: {
+      type: String,
+      minlength: [6, "Password must be at least 6 characters"],
+      required: [true, "Password is required"],
+    },
+    mobile: {
+      type: String,
+      minlength: [10, "Mobile number must be at least 10 characters"],
+      maxlength: [10, "Mobile number must be at most 10 characters"],
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+userSchema.pre("save", function (): void {
+  if (!this.isModified('password')) return;
+  this.password = bcrypt.hashSync(this.password, 10);
+});
+
+userSchema.methods.comparePassword = function (password: string): boolean {
+  return bcrypt.compareSync(password, this.password);
+}
+
+const UserModel = mongoose.model("User", userSchema);
+
+export default UserModel;
