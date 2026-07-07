@@ -1,17 +1,18 @@
-import { connectDB } from "@/lib/db";
-import { ApiResponse } from "@/types/api.types";
-import { RegisterBody } from "@/types/user.types";
 import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "@/lib/db";
 import UserModel from "@/models/user.model";
+import { ApiResponse } from "@/types/api.types";
+import { IUser, LoginBody } from "@/types/user.types";
 import { generateToken } from "@/lib/jwt";
+
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    const body: RegisterBody = await req.json();
-    const { name, email, password, mobile } = body;
+    const body: LoginBody = await req.json();
+    const { email, password } = body;
 
-    if (!name || !email || !password) {
+    if (!email || !password) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -23,27 +24,37 @@ export async function POST(req: NextRequest) {
 
     const isExisted = await UserModel.findOne({ email });
 
-    if (isExisted) {
+    if (!isExisted) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: "User already exists",
+          message: "User not found",
         },
-        { status: 409 },
+        { status: 404 },
       );
     }
 
-    const newUser = await UserModel.create({ name, email, password, mobile });
+    let matchPass = isExisted.comparePassword(password);
 
-    let token = generateToken({ userId: newUser._id.toString() });
+    if (!matchPass) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Invalid credentials",
+        },
+        { status: 401 },
+      );
+    }
+
+    let token = generateToken({ userId: isExisted._id.toString() });
 
     let response = NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "User registered successfully",
-        data: newUser,
+        message: "User LoggedIn successfully",
+        data: isExisted,
       },
-      { status: 201 },
+      { status: 200 },
     );
 
     response.cookies.set("token", token, {
