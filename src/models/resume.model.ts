@@ -40,7 +40,8 @@ const resumeSchema = new mongoose.Schema<IResume>(
           position: String,
           startDate: String,
           endDate: String,
-          description: String,
+          currentlyWorking: Boolean,
+          description: [String],
         },
       ],
       default: [],
@@ -50,7 +51,7 @@ const resumeSchema = new mongoose.Schema<IResume>(
       type: [
         {
           title: String,
-          description: String,
+          description: [String],
           githubUrl: String,
           liveUrl: String,
           techStack: [String],
