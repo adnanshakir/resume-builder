@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { IResume } from "../types/resume.types";
 
-let resumeSchema = new mongoose.Schema<IResume>(
+const resumeSchema = new mongoose.Schema<IResume>(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ let resumeSchema = new mongoose.Schema<IResume>(
         linkedin: String,
         portfolio: String,
       },
-      default: {}
+      default: {},
     },
 
     workExperience: {
@@ -86,6 +86,4 @@ let resumeSchema = new mongoose.Schema<IResume>(
   },
 );
 
-let resumeModel = mongoose.model("Resume", resumeSchema);
-
-export default resumeModel;
+export default (mongoose.models.Resume as mongoose.Model<IResume>) || mongoose.model<IResume>("Resume", resumeSchema);
