@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { AtsScoreBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -72,8 +73,7 @@ export async function POST(req: NextRequest) {
 
     const result = await generateAiContent(prompt);
 
-    const atsResult = JSON.parse(result);
-
+    const atsResult = parseAiJson(result);
     return NextResponse.json<ApiResponse>(
       {
         success: true,

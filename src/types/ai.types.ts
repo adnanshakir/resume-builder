@@ -1,13 +1,33 @@
+import { ISkillCategory } from "@/types/resume.types";
 export interface GenerateSummeryBody {
   experienceLevel: string;
   skills: string[];
   jobTitle: string;
 }
-
 export interface GenerateSkillsBody {
   experienceLevel: string;
   jobTitle: string;
   skills?: string[];
+}
+
+export interface AtsScoreBody {
+  jobTitle: string;
+  summary?: string;
+  skills?: ISkillCategory[];
+  workExperience?: {
+    position: string;
+    company: string;
+    description: string[];
+  }[];
+  projects?: {
+    title: string;
+    description: string[];
+    techStack: string[];
+  }[];
+  education?: {
+    degree: string;
+    institution: string;
+  }[];
 }
 
 export interface GenerateProjectDescBody {
@@ -35,24 +55,4 @@ export interface GenerateWorkExperienceBody {
 export interface ImproveContentBody {
   content: string;
   contentType: 'summary' | 'projectDescription' | 'workExperience';
-}
-
-export interface AtsScoreBody {
-  jobTitle: string;
-  summary?: string;
-  skills?: { category: string; items: string[] }[];
-  workExperience?: {
-    position: string;
-    company: string;
-    description: string[];
-  }[];
-  projects?: {
-    title: string;
-    description: string[];
-    techStack: string[];
-  }[];
-  education?: {
-    degree: string;
-    institution: string;
-  }[];
 }

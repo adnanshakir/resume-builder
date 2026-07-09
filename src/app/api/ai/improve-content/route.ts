@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { ImproveContentBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     const result = await generateAiContent(prompt);
 
-    const { improved } = JSON.parse(result);
+    const { improved} = parseAiJson(result);
 
     return NextResponse.json<ApiResponse>(
       {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { GenerateWorkExperienceBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,10 +47,7 @@ export async function POST(req: NextRequest) {
     }`;
 
     const result = await generateAiContent(prompt);
-
-    const cleaned = result.trim().replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/, "");
-
-    const { description } = JSON.parse(cleaned);
+    const { description } = parseAiJson(result);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -67,6 +65,6 @@ export async function POST(req: NextRequest) {
       success: false,
       message: "Error in generating work experience",
       error: (err as Error).message,
-    });
+    }, { status: 500 });
   }
 }

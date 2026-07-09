@@ -73,7 +73,12 @@ const resumeSchema = new mongoose.Schema<IResume>(
     },
 
     skills: {
-      type: [String],
+      type: [
+        {
+          category: String,
+          items: [String],
+        },
+      ],
       default: [],
     },
 

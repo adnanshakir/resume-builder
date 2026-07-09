@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { GenerateSkillsBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,9 +45,7 @@ export async function POST(req: NextRequest) {
 
     const result = await generateAiContent(prompt);
 
-    const cleaned = result.trim().replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/, "");
-
-    const { skills: generatedSkills } = JSON.parse(cleaned);
+    const { skills: generatedSkills } = parseAiJson(result);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -60,10 +59,13 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     console.log("Error in generating skills:", err);
-    return NextResponse.json<ApiResponse>({
-      success: false,
-      message: "Error in generating skills",
-      error: (err as Error).message,
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        success: false,
+        message: "Error in generating skills",
+        error: (err as Error).message,
+      },
+      { status: 500 },
+    );
   }
 }

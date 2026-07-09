@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { GenerateProjectDescBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     const result = await generateAiContent(prompt);
 
-    const { description } = JSON.parse(result);
+    const { description } = parseAiJson(result);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -60,10 +61,13 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     console.log("Error in generating project description:", err);
-    return NextResponse.json<ApiResponse>({
-      success: false,
-      message: "Error in generating project description",
-      error: (err as Error).message,
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        success: false,
+        message: "Error in generating project description",
+        error: (err as Error).message,
+      },
+      { status: 500 },
+    );
   }
 }

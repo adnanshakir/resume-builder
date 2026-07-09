@@ -16,6 +16,7 @@ let userSchema = new mongoose.Schema<UserDocs>(
     email: {
       type: String,
       trim: true,
+      lowercase: true,
       required: [true, "Email is required"],
       unique: [true, "Email already exists"],
     },
@@ -45,4 +46,3 @@ userSchema.methods.comparePassword = function (password: string): boolean {
 };
 
 export default (mongoose.models.User as mongoose.Model<UserDocs>) || mongoose.model<UserDocs>("User", userSchema);
-

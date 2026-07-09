@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-
 export interface IPersonalInfo {
   fullname: string;
   email: string;
@@ -15,12 +14,13 @@ export interface IWorkExperience {
   position: string;
   startDate: string;
   endDate: string;
-  description: string;
+  currentlyWorking: boolean;
+  description: string[];
 }
 
 export interface IProjects {
   title: string;
-  description: string;
+  description: string[];
   githubUrl: string;
   liveUrl: string;
   techStack: string[];
@@ -33,19 +33,25 @@ export interface IEducation {
   endDate: string;
 }
 
+export interface ISkillCategory {
+  category: string;
+  items: string[];
+}
+
 export interface IResume {
   _id?: string;
   user_id: Types.ObjectId;
   title: string;
-  summary: string;
+  summary?: string;
 
-  personalInfo: IPersonalInfo;
+  personalInfo?: IPersonalInfo;
   workExperience?: IWorkExperience[];
-  projects: IProjects[];
-  education: IEducation[];
+  projects?: IProjects[];
+  education?: IEducation[];
 
   certifications?: string[];
-  skills: string[];
+  skills?: ISkillCategory[];
+
   createdAt?: Date;
   updatedAt?: Date;
 }

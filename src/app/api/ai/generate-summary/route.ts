@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
 import { GenerateSummeryBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
+import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,22 +45,27 @@ export async function POST(req: NextRequest) {
 
     const result = await generateAiContent(prompt);
 
-    const { summary } = JSON.parse(result);
+    const { summary } = parseAiJson(result);
 
-    return NextResponse.json<ApiResponse>({
-      success: true,
-      message: "Summary generated successfully",
+    return NextResponse.json<ApiResponse>(
+      {
+        success: true,
+        message: "Summary generated successfully",
         data: {
-            summary
+          summary,
         },
-    },{ status: 201 });
-
+      },
+      { status: 201 },
+    );
   } catch (err) {
     console.log("Error in generating summary:", err);
-    return NextResponse.json<ApiResponse>({
-      success: false,
-      message: "Error in generating summary",
-      error: (err as Error).message,
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        success: false,
+        message: "Error in generating summary",
+        error: (err as Error).message,
+      },
+      { status: 500 },
+    );
   }
 }
