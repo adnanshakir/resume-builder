@@ -31,3 +31,28 @@ export interface GenerateWorkExperienceBody {
   responsibilities: string;
   techStack?: string[];
 }
+
+export interface ImproveContentBody {
+  content: string;
+  contentType: 'summary' | 'projectDescription' | 'workExperience';
+}
+
+export interface AtsScoreBody {
+  jobTitle: string;
+  summary?: string;
+  skills?: { category: string; items: string[] }[];
+  workExperience?: {
+    position: string;
+    company: string;
+    description: string[];
+  }[];
+  projects?: {
+    title: string;
+    description: string[];
+    techStack: string[];
+  }[];
+  education?: {
+    degree: string;
+    institution: string;
+  }[];
+}
