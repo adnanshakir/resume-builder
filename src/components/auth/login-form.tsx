@@ -25,7 +25,7 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">
       <AuthCard
         title="Welcome back"
         description="Log in to continue building your resume"

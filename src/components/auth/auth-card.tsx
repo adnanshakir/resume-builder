@@ -18,8 +18,9 @@ export function AuthCard({ title, description, fields, action, footer }: AuthCar
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
+      className="w-full"
     >
-      <Card className="w-full max-w-sm overflow-hidden py-0 gap-0">
+      <Card className="w-full overflow-hidden py-0 gap-0 bg-transparent ring-0">
         <CardContent className="space-y-4 px-6 pt-6 pb-6">
           <div className="space-y-1 mb-6">
             <h1 className="text-2xl font-semibold">{title}</h1>
@@ -30,7 +31,7 @@ export function AuthCard({ title, description, fields, action, footer }: AuthCar
 
         <Separator />
 
-        <div className="space-y-3 bg-muted/40 px-6 py-5">
+        <div className="space-y-3 px-6 py-5">
           {action}
           <p className="text-sm text-center text-muted-foreground">{footer}</p>
         </div>

@@ -1,4 +1,3 @@
-// components/auth/register-form.tsx
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -26,7 +25,7 @@ export function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">
       <AuthCard
         title="Create your account"
         description="Start building your resume in minutes"

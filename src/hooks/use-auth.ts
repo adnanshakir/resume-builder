@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner"; // or your shadcn toast import
+import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
 import { RegisterBody, LoginBody } from "@/types/user.types";
 
