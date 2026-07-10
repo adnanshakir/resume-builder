@@ -8,21 +8,20 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ resu
   try {
     await connectDB();
 
-    const user = await getCurrentUser();
+    const userId = await getCurrentUser();
     const { resumeId } = await params;
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
           message: "Unauthorized",
-          error: "User not authenticated",
         },
         { status: 401 },
       );
     }
 
-    const resume = await resumeModel.findOne({ _id: resumeId, user_id: user.userId });
+    const resume = await resumeModel.findOne({ _id: resumeId, user_id: userId });
 
     if (!resume) {
       return NextResponse.json<ApiResponse>(
@@ -44,11 +43,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ resu
       { status: 200 },
     );
   } catch (err) {
-    console.log("Error in get resume api", err);
+    console.log("Error fetching resume:", err);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Error in get resume",
+        message: "Error fetching resume",
         error: (err as Error).message,
       },
       { status: 500 },
@@ -60,10 +59,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
   try {
     await connectDB();
 
-    const user = await getCurrentUser();
+    const userId = await getCurrentUser();
     const { resumeId } = await params;
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -76,7 +75,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ re
 
     const body = await req.json();
 
-    const resume = await resumeModel.findOneAndUpdate({ _id: resumeId, user_id: user.userId }, { $set: body }, { new: true, runValidators: true });
+    const resume = await resumeModel.findOneAndUpdate({ _id: resumeId, user_id: userId }, { $set: body }, { new: true, runValidators: true });
 
     if (!resume) {
       return NextResponse.json<ApiResponse>(
@@ -114,10 +113,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
   try {
     await connectDB();
 
-    const user = await getCurrentUser();
+    const userId = await getCurrentUser();
     const { resumeId } = await params;
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -128,7 +127,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       );
     }
 
-    const resume = await resumeModel.findOneAndDelete({ _id: resumeId, user_id: user.userId });
+    const resume = await resumeModel.findOneAndDelete({ _id: resumeId, user_id: userId });
 
     if (!resume) {
       return NextResponse.json<ApiResponse>(

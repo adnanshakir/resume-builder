@@ -3,10 +3,10 @@ export interface IPersonalInfo {
   fullname: string;
   email: string;
   mobile: string;
-  location: string;
-  github: string;
-  linkedin: string;
-  portfolio: string;
+  location?: string;
+  github?: string;
+  linkedin?: string;
+  portfolio?: string;
 }
 
 export interface IWorkExperience {

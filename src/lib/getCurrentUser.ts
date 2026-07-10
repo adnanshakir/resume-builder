@@ -1,19 +1,19 @@
 import { verifyToken } from "./jwt";
 import { cookies } from "next/headers";
 
-export async function getCurrentUser(){
-    try{
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token")?.value;
+export async function getCurrentUser(): Promise<string | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
 
-        if(!token) throw new Error("No token found");
+    if (!token) throw new Error("No token found");
 
-        const decode = verifyToken(token);
-        if(!decode) throw new Error("Unauthorized");
+    const decoded = verifyToken(token);
+    if (!decoded) throw new Error("Unauthorized");
 
-        return decode.userId;
-
-    }catch(err){
-        console.log("Error while getting current user",err);
-    }
+    return decoded.userId;
+  } catch(err) {
+    console.log("Error while getting current user", err);
+    return null;
+  }
 }

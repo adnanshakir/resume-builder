@@ -8,35 +8,34 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
-    const user = await getCurrentUser();
+    const userId = await getCurrentUser();
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
           message: "Unauthorized",
-          error: "User not authenticated",
         },
         { status: 401 },
       );
     }
 
-    const resumes = await resumeModel.find({ user_id: user.userId }).sort({ updatedAt: -1 });
+    const resumes = await resumeModel.find({ user_id: userId }).sort({ updatedAt: -1 });
 
     return NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "Resume fetched successfully",
+        message: "Resumes fetched successfully",
         data: resumes,
       },
       { status: 200 },
     );
   } catch (err) {
-    console.log("Error in get resume api", err);
+    console.log("Error fetching resumes:", err);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Error in get resume",
+        message: "Error fetching resumes",
         error: (err as Error).message,
       },
       { status: 500 },

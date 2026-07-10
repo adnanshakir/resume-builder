@@ -4,6 +4,7 @@ import { RegisterBody } from "@/types/user.types";
 import { NextRequest, NextResponse } from "next/server";
 import UserModel from "@/models/user.model";
 import { generateToken } from "@/lib/jwt";
+import resumeModel from "@/models/resume.model";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: "User already exists",
+          message: "Email already in use",
         },
         { status: 409 },
       );
@@ -35,12 +36,24 @@ export async function POST(req: NextRequest) {
 
     const newUser = await UserModel.create({ name, email, password, mobile });
 
-    let token = generateToken({ userId: newUser._id.toString() });
+    await resumeModel.create({
+      user_id: newUser._id.toString(),
+      title: "Untitled Resume",
+      summary: "",
+      personalInfo: {},
+      workExperience: [],
+      projects: [],
+      education: [],
+      certifications: [],
+      skills: [],
+    });
 
-    let response = NextResponse.json<ApiResponse>(
+    const token = generateToken({ userId: newUser._id.toString() });
+
+    const response = NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "User registered successfully",
+        message: "Account created successfully",
         data: newUser,
       },
       { status: 201 },
@@ -49,16 +62,16 @@ export async function POST(req: NextRequest) {
     response.cookies.set("token", token, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 60 * 60, // 1 hour
+      maxAge: 60 * 60,
     });
 
     return response;
   } catch (err) {
-    console.log("Error in register route: ", err);
+    console.log("Error in register route:", err);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Internal server error",
+        message: "Error creating account",
         error: (err as Error).message,
       },
       { status: 500 },

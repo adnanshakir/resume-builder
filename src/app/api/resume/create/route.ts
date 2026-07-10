@@ -11,10 +11,7 @@ export async function POST(req: NextRequest) {
 
     if (!userId) {
       return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "Could not find user",
-        },
+        { success: false, message: "Unauthorized" },
         { status: 401 },
       );
     }
@@ -39,16 +36,16 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 },
     );
-
   } catch (err) {
-    console.log("Error in creating resume: ", err);
+    console.log("Error in create resume route:", err);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Error in creating resume",
+        message: "Error creating resume",
         error: (err as Error).message,
       },
       { status: 500 },
     );
   }
 }
+
