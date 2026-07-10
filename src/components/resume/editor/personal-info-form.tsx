@@ -14,9 +14,10 @@ import { Loader2 } from "lucide-react";
 interface PersonalInfoFormProps {
   resume: IResume;
   onUpdate: (resume: IResume) => void;
+  onSaved?: () => void;
 }
 
-export function PersonalInfoForm({ resume, onUpdate }: PersonalInfoFormProps) {
+export function PersonalInfoForm({ resume, onUpdate, onSaved }: PersonalInfoFormProps) {
   const {
     register,
     handleSubmit,
@@ -44,10 +45,16 @@ export function PersonalInfoForm({ resume, onUpdate }: PersonalInfoFormProps) {
 
     toast.success("Personal info saved");
     onUpdate(res.data);
+    onSaved?.();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-1">
+        <h2 className="text-lg font-semibold">Personal Information</h2>
+        <p className="text-sm text-muted-foreground">Basic contact details recruiters need to reach you — this appears at the top of your resume.</p>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 space-y-2">
           <Label htmlFor="fullname">Full Name</Label>

@@ -1,4 +1,7 @@
+import { dummyResume } from "@/constants/dummy- resume";
 import { IResume } from "@/types/resume.types";
+import { FaGithub, FaLinkedin } from "react-icons/fa6";
+import { Globe, Mail, Phone, MapPin } from "lucide-react";
 
 interface ResumePreviewProps {
   resume: IResume | null;
@@ -6,41 +9,85 @@ interface ResumePreviewProps {
 }
 
 export function ResumePreview({ resume, loading }: ResumePreviewProps) {
-  if (loading || !resume) {
-    return (
-      <div className="mx-auto flex min-h-[500px] max-w-2xl items-center justify-center rounded-lg bg-white text-sm text-gray-400 shadow-sm">
-        {loading ? "Loading preview..." : "No resume data"}
-      </div>
-    );
+  if (loading) {
+    return <div className="mx-auto flex h-[1123px] w-[794px] items-center justify-center bg-white text-sm text-gray-400 shadow-sm">Loading preview...</div>;
   }
 
-  const { personalInfo, summary, skills, workExperience, projects, education, certifications } = resume;
+  const personalInfo = resume?.personalInfo?.fullname ? resume.personalInfo : dummyResume.personalInfo;
+  const summary = resume?.summary || dummyResume.summary;
+  const skills = resume?.skills?.length ? resume.skills : dummyResume.skills;
+  const workExperience = resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience;
+  const projects = resume?.projects?.length ? resume.projects : dummyResume.projects;
+  const education = resume?.education?.length ? resume.education : dummyResume.education;
+  const certifications = resume?.certifications?.length ? resume.certifications : dummyResume.certifications;
+
+  const isPlaceholder = !resume?.personalInfo?.fullname;
 
   return (
-    <div id="resume-preview" className="mx-auto max-w-2xl space-y-6 rounded-lg bg-white p-10 text-black shadow-sm">
+    <div id="resume-preview" className={`mx-auto w-[794px] min-h-[1123px] space-y-6 bg-white p-12 text-black shadow-sm ${isPlaceholder ? "opacity-60" : ""}`}>
       {/* Header */}
-      <div className="space-y-1 border-b pb-4">
-        <h1 className="text-2xl font-bold">{personalInfo?.fullname || "Your Name"}</h1>
-        <div className="flex flex-wrap gap-x-3 text-xs text-gray-600">
-          {personalInfo?.email && <span>{personalInfo.email}</span>}
-          {personalInfo?.mobile && <span>• {personalInfo.mobile}</span>}
-          {personalInfo?.location && <span>• {personalInfo.location}</span>}
-          {personalInfo?.github && <span>• {personalInfo.github}</span>}
-          {personalInfo?.linkedin && <span>• {personalInfo.linkedin}</span>}
-          {personalInfo?.portfolio && <span>• {personalInfo.portfolio}</span>}
+      <div className="space-y-2 border-b pb-4">
+        <h1 className="text-2xl font-bold">{personalInfo.fullname}</h1>
+
+        <div className="flex flex-wrap items-center gap-x-2 text-xs text-gray-600">
+          {personalInfo.email && (
+            <span className="flex items-center gap-1">
+              <Mail className="h-3 w-3" /> {personalInfo.email}
+            </span>
+          )}
+          {personalInfo.mobile && (
+            <>
+              <span>|</span>
+              <span className="flex items-center gap-1">
+                <Phone className="h-3 w-3" /> {personalInfo.mobile}
+              </span>
+            </>
+          )}
+          {personalInfo.location && (
+            <>
+              <span>|</span>
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" /> {personalInfo.location}
+              </span>
+            </>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-2 text-xs text-gray-600">
+          {personalInfo.github && (
+            <span className="flex items-center gap-1">
+              <FaGithub className="h-3 w-3" /> {personalInfo.github}
+            </span>
+          )}
+          {personalInfo.linkedin && (
+            <>
+              <span>|</span>
+              <span className="flex items-center gap-1">
+                <FaLinkedin className="h-3 w-3" /> {personalInfo.linkedin}
+              </span>
+            </>
+          )}
+          {personalInfo.portfolio && (
+            <>
+              <span>|</span>
+              <span className="flex items-center gap-1">
+                <Globe className="h-3 w-3" /> {personalInfo.portfolio}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
       {summary && (
         <section>
-          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-700">Summary</h2>
+          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-black">Summary</h2>
           <p className="text-sm leading-6 text-gray-800">{summary}</p>
         </section>
       )}
 
       {!!skills?.length && (
         <section>
-          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-700">Skills</h2>
+          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-black">Skills</h2>
           <div className="space-y-1">
             {skills.map((s) => (
               <p key={s.category} className="text-sm text-gray-800">
@@ -54,7 +101,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
 
       {!!workExperience?.length && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-700">Work Experience</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-black">Work Experience</h2>
           <div className="space-y-4">
             {workExperience.map((exp, i) => (
               <div key={i}>
@@ -81,7 +128,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
 
       {!!projects?.length && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-700">Projects</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-black">Projects</h2>
           <div className="space-y-4">
             {projects.map((proj, i) => (
               <div key={i}>
@@ -104,7 +151,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
 
       {!!education?.length && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-700">Education</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-black">Education</h2>
           <div className="space-y-2">
             {education.map((edu, i) => (
               <div key={i} className="flex items-baseline justify-between">
@@ -122,7 +169,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
 
       {!!certifications?.length && (
         <section>
-          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-700">Certifications</h2>
+          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-black">Certifications</h2>
           <ul className="list-disc space-y-0.5 pl-4">
             {certifications.map((c, i) => (
               <li key={i} className="text-sm text-gray-800">

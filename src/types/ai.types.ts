@@ -1,5 +1,5 @@
 import { ISkillCategory } from "@/types/resume.types";
-export interface GenerateSummeryBody {
+export interface GenerateSummaryBody {
   experienceLevel: string;
   skills: string[];
   jobTitle: string;

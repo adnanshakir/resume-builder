@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@/types/api.types";
-import { GenerateSummeryBody } from "@/types/ai.types";
+import { GenerateSummaryBody } from "@/types/ai.types";
 import { generateAiContent } from "@/lib/gemini";
 import { parseAiJson } from "@/lib/parseAiJson";
 
 export async function POST(req: NextRequest) {
   try {
-    const body: GenerateSummeryBody = await req.json();
+    const body: GenerateSummaryBody = await req.json();
 
     const { experienceLevel, skills, jobTitle } = body;
 

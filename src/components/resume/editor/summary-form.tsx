@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { summaryInputSchema, SummaryInputValues } from "@/schemas/resume.schema";
@@ -13,13 +13,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SummaryFormProps {
   resume: IResume;
   onUpdate: (resume: IResume) => void;
+  onSaved?: () => void;
 }
 
-export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
+export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
   const [generatedSummary, setGeneratedSummary] = useState(resume.summary ?? "");
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -27,6 +29,7 @@ export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<SummaryInputValues>({
     resolver: zodResolver(summaryInputSchema),
@@ -37,7 +40,10 @@ export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
     const res = await aiService.generateSummary({
       jobTitle: data.jobTitle,
       experienceLevel: data.experienceLevel,
-      skills: data.skills.split(",").map((s) => s.trim()).filter(Boolean),
+      skills: data.skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     });
     setGenerating(false);
 
@@ -66,10 +72,18 @@ export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
 
     toast.success("Summary saved");
     onUpdate(res.data);
+    onSaved?.();
   };
 
   return (
     <div className="space-y-6">
+      <div className="space-y-1">
+        <h2 className="text-lg font-semibold">Professional Summary</h2>
+        <p className="text-sm text-muted-foreground">
+          Tell us your target role, experience, and key skills — AI will write a tailored summary you can edit before saving.
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit(onGenerate)} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="jobTitle">Target Job Title</Label>
@@ -79,7 +93,24 @@ export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="experienceLevel">Experience Level</Label>
-          <Input id="experienceLevel" {...register("experienceLevel")} placeholder="Fresher / 2 years / Senior" />
+          <Controller
+            control={control}
+            name="experienceLevel"
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger id="experienceLevel" className="w-full">
+                  <SelectValue placeholder="Select experience level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Fresher">Fresher</SelectItem>
+                  <SelectItem value="1-2 years">1-2 years</SelectItem>
+                  <SelectItem value="3-5 years">3-5 years</SelectItem>
+                  <SelectItem value="5-8 years">5-8 years</SelectItem>
+                  <SelectItem value="8+ years">8+ years</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
           <p className="min-h-5 text-sm text-destructive">{errors.experienceLevel?.message}</p>
         </div>
 
@@ -104,12 +135,7 @@ export function SummaryForm({ resume, onUpdate }: SummaryFormProps) {
       {generatedSummary && (
         <div className="space-y-2">
           <Label htmlFor="summaryOutput">Summary</Label>
-          <Textarea
-            id="summaryOutput"
-            value={generatedSummary}
-            onChange={(e) => setGeneratedSummary(e.target.value)}
-            rows={4}
-          />
+          <Textarea id="summaryOutput" value={generatedSummary} onChange={(e) => setGeneratedSummary(e.target.value)} rows={4} />
           <Button onClick={onSave} disabled={saving} className="w-full">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save & Continue"}
           </Button>
