@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     response.cookies.set("token", token, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 60 * 60, // 1 hour
+      maxAge: 60 * 60 * 24 * 7, // 1 hour
     });
 
     return response;

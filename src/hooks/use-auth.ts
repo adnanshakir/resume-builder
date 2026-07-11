@@ -38,5 +38,10 @@ export function useAuth() {
     return true;
   };
 
-  return { register, login, loading };
+  const logout = async () => {
+    await authService.logout();
+    router.push("/");
+  };
+
+  return { register, login, loading, logout };
 }
