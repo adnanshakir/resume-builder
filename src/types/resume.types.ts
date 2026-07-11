@@ -44,6 +44,8 @@ export interface IResume {
   title: string;
   summary?: string;
 
+  sectionOrder?: string[];
+
   personalInfo?: IPersonalInfo;
   workExperience?: IWorkExperience[];
   projects?: IProjects[];

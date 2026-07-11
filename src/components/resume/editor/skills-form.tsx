@@ -17,8 +17,8 @@ interface SkillsFormProps {
 }
 
 export function SkillsForm({ resume, onUpdate, onSaved }: SkillsFormProps) {
-  const [jobTitle, setJobTitle] = useState("");
-  const [experienceLevel, setExperienceLevel] = useState("");
+  const [jobTitle, setJobTitle] = useState(resume.targetJobTitle ?? "");
+  const [experienceLevel, setExperienceLevel] = useState(resume.experienceLevel ?? "");
   const [rawSkills, setRawSkills] = useState("");
   const [skills, setSkills] = useState<ISkillCategory[]>(resume.skills ?? []);
   const [generating, setGenerating] = useState(false);
@@ -34,7 +34,10 @@ export function SkillsForm({ resume, onUpdate, onSaved }: SkillsFormProps) {
     const res = await aiService.generateSkills({
       jobTitle,
       experienceLevel,
-      skills: rawSkills.split(",").map((s) => s.trim()).filter(Boolean),
+      skills: rawSkills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     });
     setGenerating(false);
 
@@ -47,9 +50,7 @@ export function SkillsForm({ resume, onUpdate, onSaved }: SkillsFormProps) {
   };
 
   const updateCategoryItems = (index: number, value: string) => {
-    setSkills((prev) =>
-      prev.map((cat, i) => (i === index ? { ...cat, items: value.split(",").map((s) => s.trim()) } : cat)),
-    );
+    setSkills((prev) => prev.map((cat, i) => (i === index ? { ...cat, items: value.split(",").map((s) => s.trim()) } : cat)));
   };
 
   const removeCategory = (index: number) => {
@@ -92,7 +93,13 @@ export function SkillsForm({ resume, onUpdate, onSaved }: SkillsFormProps) {
         </div>
 
         <Button onClick={onGenerate} variant="secondary" disabled={generating} className="w-full">
-          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Sparkles className="h-4 w-4" /> Generate Skills</>}
+          {generating ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4" /> Generate Skills
+            </>
+          )}
         </Button>
       </div>
 
@@ -106,10 +113,7 @@ export function SkillsForm({ resume, onUpdate, onSaved }: SkillsFormProps) {
                   <X className="h-3.5 w-3.5" />
                 </button>
               </div>
-              <Input
-                value={cat.items.join(", ")}
-                onChange={(e) => updateCategoryItems(i, e.target.value)}
-              />
+              <Input value={cat.items.join(", ")} onChange={(e) => updateCategoryItems(i, e.target.value)} />
             </div>
           ))}
 

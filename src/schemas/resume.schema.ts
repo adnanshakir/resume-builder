@@ -15,7 +15,7 @@ export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
 export const summaryInputSchema = z.object({
   jobTitle: z.string().trim().min(2, "Job title is required"),
   experienceLevel: z.string().trim().min(1, "Select or enter experience level"),
-  skills: z.string().trim().min(1, "Add at least one skill"), // comma-separated in the form, split before sending
+  skills: z.string().trim().min(1, "Add at least one skill"),
 });
 
 export type SummaryInputValues = z.infer<typeof summaryInputSchema>;

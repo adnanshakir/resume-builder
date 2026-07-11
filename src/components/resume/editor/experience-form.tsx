@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Sparkles, Loader2, Plus, X } from "lucide-react";
+import { MonthYearPicker } from "./month-year-picker";
 
 interface ExperienceFormProps {
   resume: IResume;
@@ -90,7 +91,6 @@ export function ExperienceForm({ resume, onUpdate, onSaved }: ExperienceFormProp
 
     toast.success("Experience saved");
     onUpdate(res.data);
-    onSaved?.();
   };
 
   return (
@@ -106,7 +106,9 @@ export function ExperienceForm({ resume, onUpdate, onSaved }: ExperienceFormProp
         <div className="space-y-2">
           {entries.map((e, i) => (
             <div key={i} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
-              <span>{e.position} · {e.company}</span>
+              <span>
+                {e.position} · {e.company}
+              </span>
               <button onClick={() => removeEntry(i)} className="text-muted-foreground hover:text-destructive">
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -127,17 +129,19 @@ export function ExperienceForm({ resume, onUpdate, onSaved }: ExperienceFormProp
           </div>
           <div className="space-y-2">
             <Label>Start Date</Label>
-            <Input value={startDate} onChange={(e) => setStartDate(e.target.value)} placeholder="Jan 2023" />
+            <MonthYearPicker value={startDate} onChange={setStartDate} />
           </div>
           <div className="space-y-2">
             <Label>End Date</Label>
-            <Input value={endDate} onChange={(e) => setEndDate(e.target.value)} placeholder="Jan 2024" disabled={currentlyWorking} />
+            <MonthYearPicker value={endDate} onChange={setEndDate} disabled={currentlyWorking} />
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <Checkbox checked={currentlyWorking} onCheckedChange={(v) => setCurrentlyWorking(!!v)} id="currentlyWorking" />
-          <Label htmlFor="currentlyWorking" className="font-normal">I currently work here</Label>
+          <Label htmlFor="currentlyWorking" className="font-normal">
+            I currently work here
+          </Label>
         </div>
 
         <div className="space-y-2">
@@ -151,17 +155,19 @@ export function ExperienceForm({ resume, onUpdate, onSaved }: ExperienceFormProp
         </div>
 
         <Button onClick={onGenerate} variant="secondary" disabled={generating} className="w-full">
-          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Sparkles className="h-4 w-4" /> Generate Bullet Points</>}
+          {generating ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4" /> Generate Bullet Points
+            </>
+          )}
         </Button>
 
         {!!bullets.length && (
           <div className="space-y-2">
             <Label>Generated bullets (editable)</Label>
-            <Textarea
-              value={bullets.join("\n")}
-              onChange={(e) => setBullets(e.target.value.split("\n"))}
-              rows={4}
-            />
+            <Textarea value={bullets.join("\n")} onChange={(e) => setBullets(e.target.value.split("\n"))} rows={4} />
             <Button onClick={addEntry} variant="outline" className="w-full">
               <Plus className="h-4 w-4" /> Add to Resume
             </Button>

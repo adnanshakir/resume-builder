@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 interface Step {
   id: string;
   label: string;
+  optional?: boolean;
 }
 
 interface ResumeStepperProps {
@@ -20,10 +21,7 @@ export function ResumeStepper({ steps, currentStep, onStepClick }: ResumeStepper
   return (
     <div className="space-y-3">
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full bg-primary transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -41,6 +39,7 @@ export function ResumeStepper({ steps, currentStep, onStepClick }: ResumeStepper
           >
             {index < currentStep && <Check className="h-3 w-3" />}
             {step.label}
+            {step.optional && <span className="text-[10px] text-muted-foreground">(optional)</span>}
           </button>
         ))}
       </div>

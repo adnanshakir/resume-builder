@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { useResume } from "@/hooks/use-resume";
+import { useResume } from "@/hooks/use-resumes";
 import { ResumePreview } from "@/components/resume/preview/resume-preview";
 import { ResumePreviewScaler } from "@/components/resume/preview/resume-preview-scaler";
 import { ResumeStepper } from "@/components/resume/editor/resume-stepper";
@@ -15,21 +15,38 @@ import { EducationForm } from "@/components/resume/editor/education-form";
 import { CertificationsForm } from "@/components/resume/editor/certifications-form";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight } from "lucide-react";
+import { resumeService } from "@/services/resume.service";
+import { SectionSettings } from "@/components/resume/editor/section-settings";
 
-const steps = [
-  { id: "personal", label: "Personal Info" },
-  { id: "summary", label: "Summary" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
-  { id: "education", label: "Education" },
-  { id: "certifications", label: "Certifications" },
-];
-
-export default function ResumeEditorPage() {
-  const { resumeId } = useParams<{ resumeId: string }>();
+function ResumeEditor({ resumeId }: { resumeId: string }) {
   const { resume, loading, setResume } = useResume(resumeId);
   const [currentStep, setCurrentStep] = useState(0);
+
+  const isFresher = resume?.experienceLevel === "Fresher / Student";
+
+  const SECTION_LABELS: Record<string, string> = {
+    experience: "Experience",
+    projects: "Projects",
+    education: "Education",
+    certifications: "Certifications",
+  };
+
+  const defaultOrder = isFresher ? ["projects", "education", "experience"] : ["experience", "projects", "education"];
+
+  const sectionOrder = resume?.sectionOrder?.length ? resume.sectionOrder : defaultOrder;
+
+  const steps = [
+    { id: "personal", label: "Personal Info" },
+    { id: "summary", label: "Summary" },
+    { id: "skills", label: "Skills" },
+    ...sectionOrder.map((id) => ({ id, label: SECTION_LABELS[id], optional: true })),
+  ];
+
+  const updateSectionOrder = async (order: string[]) => {
+    if (!resume?._id) return;
+    const res = await resumeService.update(resume._id, { sectionOrder: order });
+    if (res.success && res.data) setResume(res.data);
+  };
 
   const goNext = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
   const goBack = () => setCurrentStep((s) => Math.max(s - 1, 0));
@@ -45,11 +62,11 @@ export default function ResumeEditorPage() {
       case "skills":
         return <SkillsForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
       case "experience":
-        return <ExperienceForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+        return <ExperienceForm resume={resume} onUpdate={setResume} />;
       case "projects":
-        return <ProjectsForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+        return <ProjectsForm resume={resume} onUpdate={setResume} />;
       case "education":
-        return <EducationForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+        return <EducationForm resume={resume} onUpdate={setResume} />;
       case "certifications":
         return <CertificationsForm resume={resume} onUpdate={setResume} />;
       default:
@@ -68,6 +85,7 @@ export default function ResumeEditorPage() {
             </div>
           ) : (
             <>
+            <SectionSettings sectionOrder={sectionOrder} onChange={updateSectionOrder} />
               <ResumeStepper steps={steps} currentStep={currentStep} onStepClick={setCurrentStep} />
               <div>{renderForm()}</div>
               <div className="flex justify-between pt-2">
@@ -75,7 +93,8 @@ export default function ResumeEditorPage() {
                   <ArrowLeft className="h-4 w-4" /> Back
                 </Button>
                 <Button variant="ghost" onClick={goNext} disabled={currentStep === steps.length - 1}>
-                  Skip <ArrowRight className="h-4 w-4" />
+                  {steps[currentStep].id === "personal" || steps[currentStep].id === "summary" ? "Skip" : "Next"}
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             </>
@@ -90,4 +109,9 @@ export default function ResumeEditorPage() {
       </div>
     </div>
   );
+}
+
+export default function ResumeEditorPage() {
+  const { resumeId } = useParams<{ resumeId: string }>();
+  return <ResumeEditor key={resumeId} resumeId={resumeId} />;
 }

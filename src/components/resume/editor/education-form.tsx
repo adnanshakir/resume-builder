@@ -52,7 +52,6 @@ export function EducationForm({ resume, onUpdate, onSaved }: EducationFormProps)
 
     toast.success("Education saved");
     onUpdate(res.data);
-    onSaved?.();
   };
 
   return (

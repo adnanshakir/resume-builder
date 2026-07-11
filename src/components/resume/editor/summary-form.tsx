@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { summaryInputSchema, SummaryInputValues } from "@/schemas/resume.schema";
+import { z } from "zod";
 import { aiService } from "@/services/ai.service";
 import { resumeService } from "@/services/resume.service";
 import { IResume } from "@/types/resume.types";
@@ -12,8 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ExperienceLevelSelect } from "@/components/resume/editor/experience-level-select";
 import { Sparkles, Loader2 } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const skillsInputSchema = z.object({
+  jobTitle: z.string().trim().min(2, "Job title is required"),
+  skills: z.string().trim().min(1, "Add at least one skill"),
+});
+type SkillsInputValues = z.infer<typeof skillsInputSchema>;
 
 interface SummaryFormProps {
   resume: IResume;
@@ -22,28 +28,32 @@ interface SummaryFormProps {
 }
 
 export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
+  const [experienceLevel, setExperienceLevel] = useState(resume.experienceLevel ?? "");
   const [generatedSummary, setGeneratedSummary] = useState(resume.summary ?? "");
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [lastJobTitle, setLastJobTitle] = useState(resume.targetJobTitle ?? "");
 
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
-  } = useForm<SummaryInputValues>({
-    resolver: zodResolver(summaryInputSchema),
+  } = useForm<SkillsInputValues>({
+    resolver: zodResolver(skillsInputSchema),
+    defaultValues: { jobTitle: resume.targetJobTitle ?? "" },
   });
 
-  const onGenerate = async (data: SummaryInputValues) => {
+  const onGenerate = async (data: SkillsInputValues) => {
+    if (!experienceLevel) {
+      toast.error("Select an experience level");
+      return;
+    }
+
     setGenerating(true);
     const res = await aiService.generateSummary({
       jobTitle: data.jobTitle,
-      experienceLevel: data.experienceLevel,
-      skills: data.skills
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
+      experienceLevel,
+      skills: data.skills.split(",").map((s) => s.trim()).filter(Boolean),
     });
     setGenerating(false);
 
@@ -52,6 +62,7 @@ export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
       return;
     }
 
+    setLastJobTitle(data.jobTitle);
     setGeneratedSummary(res.data.summary);
   };
 
@@ -62,7 +73,11 @@ export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
     }
 
     setSaving(true);
-    const res = await resumeService.update(resume._id!, { summary: generatedSummary });
+    const res = await resumeService.update(resume._id!, {
+      summary: generatedSummary,
+      targetJobTitle: lastJobTitle,
+      experienceLevel,
+    });
     setSaving(false);
 
     if (!res.success || !res.data) {
@@ -91,28 +106,7 @@ export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
           <p className="min-h-5 text-sm text-destructive">{errors.jobTitle?.message}</p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="experienceLevel">Experience Level</Label>
-          <Controller
-            control={control}
-            name="experienceLevel"
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger id="experienceLevel" className="w-full">
-                  <SelectValue placeholder="Select experience level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Fresher">Fresher</SelectItem>
-                  <SelectItem value="1-2 years">1-2 years</SelectItem>
-                  <SelectItem value="3-5 years">3-5 years</SelectItem>
-                  <SelectItem value="5-8 years">5-8 years</SelectItem>
-                  <SelectItem value="8+ years">8+ years</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          <p className="min-h-5 text-sm text-destructive">{errors.experienceLevel?.message}</p>
-        </div>
+        <ExperienceLevelSelect value={experienceLevel} onChange={setExperienceLevel} />
 
         <div className="space-y-2">
           <Label htmlFor="skills">Key Skills</Label>
@@ -121,14 +115,7 @@ export function SummaryForm({ resume, onUpdate, onSaved }: SummaryFormProps) {
         </div>
 
         <Button type="submit" variant="secondary" disabled={generating} className="w-full">
-          {generating ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4" />
-              Generate Summary
-            </>
-          )}
+          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Sparkles className="h-4 w-4" /> Generate Summary</>}
         </Button>
       </form>
 

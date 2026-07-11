@@ -87,7 +87,6 @@ export function ProjectsForm({ resume, onUpdate, onSaved }: ProjectsFormProps) {
 
     toast.success("Projects saved");
     onUpdate(res.data);
-    onSaved?.();
   };
 
   return (
