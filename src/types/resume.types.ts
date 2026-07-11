@@ -21,8 +21,8 @@ export interface IWorkExperience {
 export interface IProjects {
   title: string;
   description: string[];
-  githubUrl: string;
-  liveUrl: string;
+  githubUrl?: string;
+  liveUrl?: string;
   techStack: string[];
 }
 
@@ -48,6 +48,9 @@ export interface IResume {
   workExperience?: IWorkExperience[];
   projects?: IProjects[];
   education?: IEducation[];
+
+  targetJobTitle?: string;
+  experienceLevel?: string;
 
   certifications?: string[];
   skills?: ISkillCategory[];

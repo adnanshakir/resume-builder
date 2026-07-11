@@ -1,3 +1,15 @@
+import { IPersonalInfo, IWorkExperience, IProjects, IEducation, ISkillCategory } from "@/types/resume.types";
+
+interface DummyResume {
+  personalInfo: IPersonalInfo;
+  summary: string;
+  skills: ISkillCategory[];
+  workExperience: IWorkExperience[];
+  projects: IProjects[];
+  education: IEducation[];
+  certifications: string[];
+}
+
 export const dummyResume = {
   personalInfo: {
     fullname: "John Doe",

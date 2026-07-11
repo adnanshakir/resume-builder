@@ -39,19 +39,15 @@ export interface GenerateProjectDescBody {
   githubUrl?: string;
   liveUrl?: string;
 }
-
 export interface GenerateWorkExperienceBody {
   jobTitle: string;
   experienceLevel: string;
   company: string;
   position: string;
-  startDate: string;
-  endDate?: string;
   currentlyWorking?: boolean;
   responsibilities: string;
   techStack?: string[];
 }
-
 export interface ImproveContentBody {
   content: string;
   contentType: 'summary' | 'projectDescription' | 'workExperience';
