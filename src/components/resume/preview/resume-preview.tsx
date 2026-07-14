@@ -1,24 +1,13 @@
-import { Globe, Mail, Phone, MapPin } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa6";
 import { IResume } from "@/types/resume.types";
 import { dummyResume } from "@/constants/dummy-resume";
 
 interface ResumePreviewProps {
   resume: IResume | null;
   loading: boolean;
+  sectionOrder: string[];
 }
 
-function LinkIcon({ href, icon: Icon, label }: { href?: string; icon: any; label: string }) {
-  if (!href) return null;
-  const url = href.startsWith("http") ? href : `https://${href}`;
-  return (
-    <a href={url} target="_blank" rel="noopener noreferrer" title={label} className="text-gray-700 hover:text-black">
-      <Icon className="h-3.5 w-3.5" />
-    </a>
-  );
-}
-
-export function ResumePreview({ resume, loading }: ResumePreviewProps) {
+export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewProps) {
   if (loading) {
     return (
       <div className="flex h-[1123px] w-[794px] items-center justify-center bg-white text-sm text-gray-400 shadow-md">
@@ -30,11 +19,22 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
   const personalInfo = resume?.personalInfo?.fullname ? resume.personalInfo : dummyResume.personalInfo;
   const summary = resume?.summary || dummyResume.summary;
   const skills = resume?.skills?.length ? resume.skills : dummyResume.skills;
-  const workExperience = resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience;
-  const projects = resume?.projects?.length ? resume.projects : dummyResume.projects;
-  const education = resume?.education?.length ? resume.education : dummyResume.education;
-  const certifications = resume?.certifications?.length ? resume.certifications : dummyResume.certifications;
   const isPlaceholder = !resume?.personalInfo?.fullname;
+
+  const showSection = (id: string) => sectionOrder.includes(id);
+
+  const workExperience = showSection("experience")
+    ? (resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience)
+    : [];
+  const projects = showSection("projects")
+    ? (resume?.projects?.length ? resume.projects : dummyResume.projects)
+    : [];
+  const education = showSection("education")
+    ? (resume?.education?.length ? resume.education : dummyResume.education)
+    : [];
+  const certifications = showSection("certifications")
+    ? (resume?.certifications?.length ? resume.certifications : dummyResume.certifications)
+    : [];
 
   const SectionHeading = ({ children }: { children: React.ReactNode }) => (
     <h2 className="mb-2 border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wide text-black">
@@ -52,31 +52,36 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
       <div className="space-y-1 pb-4 text-center">
         <h1 className="text-2xl font-bold">{personalInfo.fullname}</h1>
         <div className="flex flex-wrap items-center justify-center gap-x-2 text-xs text-gray-600">
-          {personalInfo.email && (
-            <span className="flex items-center gap-1">
-              <Mail className="h-3 w-3" /> {personalInfo.email}
-            </span>
-          )}
-          {personalInfo.mobile && (
+          {personalInfo.email && <span>{personalInfo.email}</span>}
+          {personalInfo.mobile && <><span>|</span><span>{personalInfo.mobile}</span></>}
+          {personalInfo.location && <><span>|</span><span>{personalInfo.location}</span></>}
+          {personalInfo.github && (
             <>
               <span>|</span>
-              <span className="flex items-center gap-1">
-                <Phone className="h-3 w-3" /> {personalInfo.mobile}
-              </span>
+              <a href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                 target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                GitHub
+              </a>
             </>
           )}
-          {personalInfo.location && (
+          {personalInfo.linkedin && (
             <>
               <span>|</span>
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" /> {personalInfo.location}
-              </span>
+              <a href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                 target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                LinkedIn
+              </a>
             </>
           )}
-          {(personalInfo.github || personalInfo.linkedin || personalInfo.portfolio) && <span>|</span>}
-          <LinkIcon href={personalInfo.github} icon={FaGithub} label="GitHub" />
-          <LinkIcon href={personalInfo.linkedin} icon={FaLinkedin} label="LinkedIn" />
-          <LinkIcon href={personalInfo.portfolio} icon={Globe} label="Portfolio" />
+          {personalInfo.portfolio && (
+            <>
+              <span>|</span>
+              <a href={personalInfo.portfolio.startsWith("http") ? personalInfo.portfolio : `https://${personalInfo.portfolio}`}
+                 target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                Portfolio
+              </a>
+            </>
+          )}
         </div>
       </div>
 
@@ -88,7 +93,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
           </section>
         )}
 
-        {!!workExperience?.length && (
+        {!!workExperience.length && (
           <section>
             <SectionHeading>Experience</SectionHeading>
             <div className="space-y-3">
@@ -111,7 +116,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
           </section>
         )}
 
-        {!!projects?.length && (
+        {!!projects.length && (
           <section>
             <SectionHeading>Projects</SectionHeading>
             <div className="space-y-3">
@@ -134,7 +139,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
           </section>
         )}
 
-        {!!education?.length && (
+        {!!education.length && (
           <section>
             <SectionHeading>Education</SectionHeading>
             <div className="space-y-1">
@@ -162,7 +167,7 @@ export function ResumePreview({ resume, loading }: ResumePreviewProps) {
           </section>
         )}
 
-        {!!certifications?.length && (
+        {!!certifications.length && (
           <section>
             <SectionHeading>Certifications</SectionHeading>
             <ul className="list-disc space-y-0.5 pl-4">

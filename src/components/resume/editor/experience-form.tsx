@@ -177,7 +177,7 @@ export function ExperienceForm({ resume, onUpdate, onSaved }: ExperienceFormProp
 
       {!!entries.length && (
         <Button onClick={onSave} disabled={saving} className="w-full">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save & Continue"}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Changes"}
         </Button>
       )}
     </div>

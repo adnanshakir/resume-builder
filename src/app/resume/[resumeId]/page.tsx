@@ -107,7 +107,7 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
 
       <div className="no-scrollbar hidden flex-col overflow-hidden lg:flex">
         <ResumePreviewScaler>
-          <ResumePreview resume={resume} loading={loading} />
+          <ResumePreview resume={resume} loading={loading} sectionOrder={sectionOrder} />
         </ResumePreviewScaler>
       </div>
     </div>
