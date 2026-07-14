@@ -23,6 +23,96 @@ const styles = StyleSheet.create({
 export function ResumePDFDocument({ resume }: { resume: IResume }) {
   const { personalInfo, summary, skills, workExperience, projects, education, certifications } = resume;
 
+  const defaultOrder = ["skills", "experience", "projects", "education", "certifications"];
+  const sectionOrder = resume.sectionOrder?.length ? resume.sectionOrder : defaultOrder;
+
+  const renderSection = (id: string) => {
+    switch (id) {
+      case "skills":
+        return !!skills?.length && (
+          <View key={id} style={styles.section}>
+            <Text style={styles.sectionTitle}>Skills</Text>
+            {skills.map((s) => (
+              <Text key={s.category} style={{ fontSize: 9.5, marginBottom: 2 }}>
+                <Text style={{ fontWeight: 700 }}>{s.category}: </Text>
+                {s.items.join(", ")}
+              </Text>
+            ))}
+          </View>
+        );
+
+      case "experience":
+        return !!workExperience?.length && (
+          <View key={id} style={styles.section}>
+            <Text style={styles.sectionTitle}>Experience</Text>
+            {workExperience.map((exp, i) => (
+              <View key={i} style={{ marginBottom: 8 }}>
+                <View style={styles.entryRow}>
+                  <Text style={styles.entryTitle}>{exp.position} · {exp.company}</Text>
+                  <Text style={styles.entryMeta}>{exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}</Text>
+                </View>
+                {exp.description?.map((d, j) => (
+                  <View key={j} style={styles.bullet}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{d}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
+        );
+
+      case "projects":
+        return !!projects?.length && (
+          <View key={id} style={styles.section}>
+            <Text style={styles.sectionTitle}>Projects</Text>
+            {projects.map((proj, i) => (
+              <View key={i} style={{ marginBottom: 8 }}>
+                <Text style={styles.entryTitle}>
+                  {proj.title}{!!proj.techStack?.length && ` — ${proj.techStack.join(", ")}`}
+                </Text>
+                {proj.description?.map((d, j) => (
+                  <View key={j} style={styles.bullet}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{d}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
+        );
+
+      case "education":
+        return !!education?.length && (
+          <View key={id} style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {education.map((edu, i) => (
+              <View key={i} style={styles.entryRow}>
+                <Text style={styles.entryTitle}>{edu.degree}, {edu.institution}</Text>
+                <Text style={styles.entryMeta}>{edu.startDate} – {edu.endDate}</Text>
+              </View>
+            ))}
+          </View>
+        );
+
+      case "certifications":
+        return !!certifications?.length && (
+          <View key={id} style={styles.section}>
+            <Text style={styles.sectionTitle}>Certifications</Text>
+            {certifications.map((c, i) => (
+              <View key={i} style={styles.bullet}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{c}</Text>
+              </View>
+            ))}
+          </View>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -45,80 +135,7 @@ export function ResumePDFDocument({ resume }: { resume: IResume }) {
           </View>
         )}
 
-        {!!workExperience?.length && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experience</Text>
-            {workExperience.map((exp, i) => (
-              <View key={i} style={{ marginBottom: 8 }}>
-                <View style={styles.entryRow}>
-                  <Text style={styles.entryTitle}>{exp.position} · {exp.company}</Text>
-                  <Text style={styles.entryMeta}>{exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}</Text>
-                </View>
-                {exp.description?.map((d, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={styles.bulletDot}>•</Text>
-                    <Text style={styles.bulletText}>{d}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {!!projects?.length && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
-            {projects.map((proj, i) => (
-              <View key={i} style={{ marginBottom: 8 }}>
-                <Text style={styles.entryTitle}>
-                  {proj.title}{!!proj.techStack?.length && ` — ${proj.techStack.join(", ")}`}
-                </Text>
-                {proj.description?.map((d, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={styles.bulletDot}>•</Text>
-                    <Text style={styles.bulletText}>{d}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {!!education?.length && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
-            {education.map((edu, i) => (
-              <View key={i} style={styles.entryRow}>
-                <Text style={styles.entryTitle}>{edu.degree}, {edu.institution}</Text>
-                <Text style={styles.entryMeta}>{edu.startDate} – {edu.endDate}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-
-        {!!skills?.length && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Skills</Text>
-            {skills.map((s) => (
-              <Text key={s.category} style={{ fontSize: 9.5, marginBottom: 2 }}>
-                <Text style={{ fontWeight: 700 }}>{s.category}: </Text>
-                {s.items.join(", ")}
-              </Text>
-            ))}
-          </View>
-        )}
-
-        {!!certifications?.length && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Certifications</Text>
-            {certifications.map((c, i) => (
-              <View key={i} style={styles.bullet}>
-                <Text style={styles.bulletDot}>•</Text>
-                <Text style={styles.bulletText}>{c}</Text>
-              </View>
-            ))}
-          </View>
-        )}
+        {sectionOrder.map(renderSection)}
       </Page>
     </Document>
   );

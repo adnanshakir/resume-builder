@@ -114,8 +114,14 @@ export function CertificationsForm({ resume, onUpdate }: CertificationsFormProps
                 <AlertDialogDescription>This action can't be undone. This will permanently delete this resume.</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction disabled={deleting} onClick={() => deleteResume(resume._id!)}>
+                <AlertDialogCancel className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className={cn(buttonVariants({ variant: "outline", size: "sm" }), "text-destructive hover:text-destructive")}
+                  disabled={deleting}
+                  onClick={() => deleteResume(resume._id!)}
+                >
                   {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>

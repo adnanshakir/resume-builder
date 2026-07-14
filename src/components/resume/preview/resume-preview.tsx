@@ -21,20 +21,107 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
   const skills = resume?.skills?.length ? resume.skills : dummyResume.skills;
   const isPlaceholder = !resume?.personalInfo?.fullname;
 
-  const showSection = (id: string) => sectionOrder.includes(id);
+  const workExperience = resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience;
+  const projects = resume?.projects?.length ? resume.projects : dummyResume.projects;
+  const education = resume?.education?.length ? resume.education : dummyResume.education;
+  const certifications = resume?.certifications?.length ? resume.certifications : dummyResume.certifications;
 
-  const workExperience = showSection("experience")
-    ? (resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience)
-    : [];
-  const projects = showSection("projects")
-    ? (resume?.projects?.length ? resume.projects : dummyResume.projects)
-    : [];
-  const education = showSection("education")
-    ? (resume?.education?.length ? resume.education : dummyResume.education)
-    : [];
-  const certifications = showSection("certifications")
-    ? (resume?.certifications?.length ? resume.certifications : dummyResume.certifications)
-    : [];
+  const renderSection = (id: string) => {
+    switch (id) {
+      case "experience":
+        return !!workExperience.length && (
+          <section key={id}>
+            <SectionHeading>Experience</SectionHeading>
+            <div className="space-y-3">
+              {workExperience.map((exp, i) => (
+                <div key={i}>
+                  <div className="flex items-baseline justify-between">
+                    <p className="text-sm font-semibold">{exp.position} · {exp.company}</p>
+                    <p className="text-xs text-gray-500">
+                      {exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}
+                    </p>
+                  </div>
+                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                    {exp.description?.map((d, j) => (
+                      <li key={j} className="text-sm text-gray-800">{d}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "projects":
+        return !!projects.length && (
+          <section key={id}>
+            <SectionHeading>Projects</SectionHeading>
+            <div className="space-y-3">
+              {projects.map((proj, i) => (
+                <div key={i}>
+                  <p className="text-sm font-semibold">
+                    {proj.title}
+                    {!!proj.techStack?.length && (
+                      <span className="font-normal text-gray-600"> — {proj.techStack.join(", ")}</span>
+                    )}
+                  </p>
+                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                    {proj.description?.map((d, j) => (
+                      <li key={j} className="text-sm text-gray-800">{d}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "education":
+        return !!education.length && (
+          <section key={id}>
+            <SectionHeading>Education</SectionHeading>
+            <div className="space-y-1">
+              {education.map((edu, i) => (
+                <div key={i} className="flex items-baseline justify-between">
+                  <p className="text-sm font-semibold">{edu.degree}, {edu.institution}</p>
+                  <p className="text-xs text-gray-500">{edu.startDate} – {edu.endDate}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "skills":
+        return !!skills?.length && (
+          <section key={id}>
+            <SectionHeading>Skills</SectionHeading>
+            <div className="space-y-1">
+              {skills.map((s) => (
+                <p key={s.category} className="text-sm text-gray-800">
+                  <span className="font-semibold">{s.category}: </span>
+                  {s.items.join(", ")}
+                </p>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "certifications":
+        return !!certifications.length && (
+          <section key={id}>
+            <SectionHeading>Certifications</SectionHeading>
+            <ul className="list-disc space-y-0.5 pl-4">
+              {certifications.map((c, i) => (
+                <li key={i} className="text-sm text-gray-800">{c}</li>
+              ))}
+            </ul>
+          </section>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   const SectionHeading = ({ children }: { children: React.ReactNode }) => (
     <h2 className="mb-2 border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wide text-black">
@@ -93,90 +180,7 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
           </section>
         )}
 
-        {!!workExperience.length && (
-          <section>
-            <SectionHeading>Experience</SectionHeading>
-            <div className="space-y-3">
-              {workExperience.map((exp, i) => (
-                <div key={i}>
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-sm font-semibold">{exp.position} · {exp.company}</p>
-                    <p className="text-xs text-gray-500">
-                      {exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}
-                    </p>
-                  </div>
-                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
-                    {exp.description?.map((d, j) => (
-                      <li key={j} className="text-sm text-gray-800">{d}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!!projects.length && (
-          <section>
-            <SectionHeading>Projects</SectionHeading>
-            <div className="space-y-3">
-              {projects.map((proj, i) => (
-                <div key={i}>
-                  <p className="text-sm font-semibold">
-                    {proj.title}
-                    {!!proj.techStack?.length && (
-                      <span className="font-normal text-gray-600"> — {proj.techStack.join(", ")}</span>
-                    )}
-                  </p>
-                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
-                    {proj.description?.map((d, j) => (
-                      <li key={j} className="text-sm text-gray-800">{d}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!!education.length && (
-          <section>
-            <SectionHeading>Education</SectionHeading>
-            <div className="space-y-1">
-              {education.map((edu, i) => (
-                <div key={i} className="flex items-baseline justify-between">
-                  <p className="text-sm font-semibold">{edu.degree}, {edu.institution}</p>
-                  <p className="text-xs text-gray-500">{edu.startDate} – {edu.endDate}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!!skills?.length && (
-          <section>
-            <SectionHeading>Skills</SectionHeading>
-            <div className="space-y-1">
-              {skills.map((s) => (
-                <p key={s.category} className="text-sm text-gray-800">
-                  <span className="font-semibold">{s.category}: </span>
-                  {s.items.join(", ")}
-                </p>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!!certifications.length && (
-          <section>
-            <SectionHeading>Certifications</SectionHeading>
-            <ul className="list-disc space-y-0.5 pl-4">
-              {certifications.map((c, i) => (
-                <li key={i} className="text-sm text-gray-800">{c}</li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {sectionOrder.map(renderSection)}
       </div>
     </div>
   );
