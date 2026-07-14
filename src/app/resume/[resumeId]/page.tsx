@@ -7,7 +7,7 @@ import { resumeService } from "@/services/resume.service";
 import { ResumePreview } from "@/components/resume/preview/resume-preview";
 import { ResumePreviewScaler } from "@/components/resume/preview/resume-preview-scaler";
 import { ResumeStepper } from "@/components/resume/editor/resume-stepper";
-import { SectionManager, ALL_SECTIONS } from "@/components/resume/editor/section-manager";
+import { SectionManager, SECTION_LABELS } from "@/components/resume/editor/section-manager";
 import { PersonalInfoForm } from "@/components/resume/editor/personal-info-form";
 import { SummaryForm } from "@/components/resume/editor/summary-form";
 import { SkillsForm } from "@/components/resume/editor/skills-form";
@@ -19,13 +19,6 @@ import { FinishStep } from "@/components/resume/editor/finish-step";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight, LayoutDashboard } from "lucide-react";
 
-const SECTION_LABELS: Record<string, string> = {
-  experience: "Experience",
-  projects: "Projects",
-  education: "Education",
-  certifications: "Certifications",
-};
-
 function ResumeEditor({ resumeId }: { resumeId: string }) {
   const router = useRouter();
   const { resume, loading, setResume } = useResume(resumeId);
@@ -33,16 +26,15 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
 
   const isFresher = resume?.experienceLevel === "Fresher / Student";
   const defaultOrder = isFresher
-    ? ["projects", "education", "experience", "certifications"]
-    : ["experience", "projects", "education", "certifications"];
+    ? ["skills", "projects", "education", "experience", "certifications"]
+    : ["skills", "experience", "projects", "education", "certifications"];
 
   const sectionOrder = resume?.sectionOrder?.length ? resume.sectionOrder : defaultOrder;
 
   const steps = [
     { id: "personal", label: "Personal Info" },
     { id: "summary", label: "Summary" },
-    { id: "skills", label: "Skills" },
-    ...sectionOrder.map((id) => ({ id, label: SECTION_LABELS[id], optional: true })),
+    ...sectionOrder.map((id) => ({ id, label: SECTION_LABELS[id] })),
     { id: "finish", label: "Finish" },
   ];
 
@@ -79,9 +71,12 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
     <div className="grid h-[calc(100vh-49px)] lg:grid-cols-2">
       <div className="no-scrollbar overflow-y-auto border-r px-8 py-10">
         <div className="mx-auto max-w-lg space-y-6">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")}>
-            <LayoutDashboard className="h-4 w-4" /> Back to Dashboard
-          </Button>
+          <div className="flex items-center justify-between gap-3">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard") }>
+              <LayoutDashboard className="h-4 w-4" /> Back to Dashboard
+            </Button>
+            <SectionManager sectionOrder={sectionOrder} onChange={updateSectionOrder} />
+          </div>
 
           {loading || !resume ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -89,7 +84,6 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
             </div>
           ) : (
             <>
-              <SectionManager sectionOrder={sectionOrder} onChange={updateSectionOrder} />
               <ResumeStepper steps={steps} currentStep={currentStep} onStepClick={setCurrentStep} />
               <div>{renderForm()}</div>
               <div className="flex justify-between pt-2">

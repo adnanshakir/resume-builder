@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { resumes, loading, creating, createResume, refetch } = useResumes();
+  const { resumes, loading, creating, createResume, renameResume, refetch } = useResumes();
   const { deleteResume, deletingId } = useDeleteResume(refetch);
 
   return (
@@ -41,6 +41,7 @@ export default function DashboardPage() {
               key={resume._id}
               resume={resume}
               onDelete={deleteResume}
+              onRename={renameResume}
               deleting={deletingId === resume._id}
             />
           ))}

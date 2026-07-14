@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 interface Step {
   id: string;
   label: string;
-  optional?: boolean;
 }
 
 interface ResumeStepperProps {
@@ -39,7 +38,6 @@ export function ResumeStepper({ steps, currentStep, onStepClick }: ResumeStepper
           >
             {index < currentStep && <Check className="h-3 w-3" />}
             {step.label}
-            {step.optional && <span className="text-[10px] text-muted-foreground">(optional)</span>}
           </button>
         ))}
       </div>

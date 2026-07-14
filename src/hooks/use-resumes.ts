@@ -36,11 +36,21 @@ export function useResumes() {
     router.push(`/resume/${res.data._id}`);
   };
 
+  const renameResume = async (resumeId: string, title: string) => {
+    const res = await resumeService.update(resumeId, { title });
+    if (!res.success || !res.data) {
+      toast.error(res.message);
+      return false;
+    }
+    setResumes((prev) => prev.map((r) => (r._id === resumeId ? res.data! : r)));
+    return true;
+  };
+
   useEffect(() => {
     fetchResumes();
   }, [fetchResumes]);
 
-  return { resumes, loading, creating, createResume, refetch: fetchResumes };
+  return { resumes, loading, creating, createResume, renameResume, refetch: fetchResumes };
 }
 
 export function useResume(resumeId: string) {
