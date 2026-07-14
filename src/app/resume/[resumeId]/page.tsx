@@ -82,8 +82,8 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
       <div className="no-scrollbar overflow-y-auto border-r px-8 py-10">
         <div className="mx-auto max-w-lg space-y-6">
           <div className="flex items-center justify-between gap-3">
-            <Button variant="ghost" onClick={() => router.push("/dashboard")} className="h-10 gap-2 px-4 text-base">
-              <LayoutDashboard className="h-5 w-5" /> Back to Dashboard
+            <Button variant="outline" size="sm" onClick={() => router.push("/dashboard")}>
+              <LayoutDashboard className="h-3.5 w-3.5" /> Back to Dashboard
             </Button>
 
             <div className="flex items-center gap-2">

@@ -11,8 +11,13 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
   if (loading) {
     return (
       <div
-        style={{ backgroundColor: "#fbfbfa", color: "#111111" }}
-        className="flex h-[1123px] w-[794px] items-center justify-center text-sm text-gray-400 shadow-md"
+        style={{
+          backgroundColor: "#ffffff",
+          color: "#111111",
+          colorScheme: "light",
+          forcedColorAdjust: "none",
+        }}
+        className="flex h-280.75 w-198.5 items-center justify-center text-sm text-gray-400 shadow-md"
       >
         Loading preview...
       </div>
@@ -22,7 +27,6 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
   const personalInfo = resume?.personalInfo?.fullname ? resume.personalInfo : dummyResume.personalInfo;
   const summary = resume?.summary || dummyResume.summary;
   const skills = resume?.skills?.length ? resume.skills : dummyResume.skills;
-  const isPlaceholder = !resume?.personalInfo?.fullname;
 
   const workExperience = resume?.workExperience?.length ? resume.workExperience : dummyResume.workExperience;
   const projects = resume?.projects?.length ? resume.projects : dummyResume.projects;
@@ -153,8 +157,13 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
   return (
     <div
       id="resume-preview"
-      style={{ backgroundColor: "#fbfbfa", color: "#111111", colorScheme: "light" }}
-      className={`h-[1123px] w-[794px] overflow-hidden p-12 ${isPlaceholder ? "opacity-60" : ""}`}
+      style={{
+        backgroundColor: "#ffffff",
+        color: "#111111",
+        colorScheme: "light",
+        forcedColorAdjust: "none",
+      }}
+      className="h-280.75 w-198.5 overflow-hidden p-12"
     >
       <div className="space-y-1 pb-4 text-center">
         <h1 className="text-2xl font-bold">{personalInfo.fullname}</h1>
