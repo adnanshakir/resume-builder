@@ -18,6 +18,7 @@ import { CertificationsForm } from "@/components/resume/editor/certifications-fo
 import { FinishStep } from "@/components/resume/editor/finish-step";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight, LayoutDashboard } from "lucide-react";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 function ResumeEditor({ resumeId }: { resumeId: string }) {
   const router = useRouter();
@@ -55,15 +56,24 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
   const renderForm = () => {
     if (!resume) return null;
     switch (steps[currentStep].id) {
-      case "personal": return <PersonalInfoForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
-      case "summary": return <SummaryForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
-      case "skills": return <SkillsForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
-      case "experience": return <ExperienceForm resume={resume} onUpdate={setResume} />;
-      case "projects": return <ProjectsForm resume={resume} onUpdate={setResume} />;
-      case "education": return <EducationForm resume={resume} onUpdate={setResume} />;
-      case "certifications": return <CertificationsForm resume={resume} onUpdate={setResume} />;
-      case "finish": return <FinishStep resume={resume} />;
-      default: return null;
+      case "personal":
+        return <PersonalInfoForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+      case "summary":
+        return <SummaryForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+      case "skills":
+        return <SkillsForm resume={resume} onUpdate={setResume} onSaved={goNext} />;
+      case "experience":
+        return <ExperienceForm resume={resume} onUpdate={setResume} />;
+      case "projects":
+        return <ProjectsForm resume={resume} onUpdate={setResume} />;
+      case "education":
+        return <EducationForm resume={resume} onUpdate={setResume} />;
+      case "certifications":
+        return <CertificationsForm resume={resume} onUpdate={setResume} />;
+      case "finish":
+        return <FinishStep resume={resume} />;
+      default:
+        return null;
     }
   };
 
@@ -72,10 +82,14 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
       <div className="no-scrollbar overflow-y-auto border-r px-8 py-10">
         <div className="mx-auto max-w-lg space-y-6">
           <div className="flex items-center justify-between gap-3">
-            <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard") }>
-              <LayoutDashboard className="h-4 w-4" /> Back to Dashboard
+            <Button variant="ghost" onClick={() => router.push("/dashboard")} className="h-10 gap-2 px-4 text-base">
+              <LayoutDashboard className="h-5 w-5" /> Back to Dashboard
             </Button>
-            <SectionManager sectionOrder={sectionOrder} onChange={updateSectionOrder} />
+
+            <div className="flex items-center gap-2">
+              <SectionManager sectionOrder={sectionOrder} onChange={updateSectionOrder} />
+              <ThemeToggle />
+            </div>
           </div>
 
           {loading || !resume ? (

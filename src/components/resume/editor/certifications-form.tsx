@@ -6,24 +6,9 @@ import { useRouter } from "next/navigation";
 import { resumeService } from "@/services/resume.service";
 import { IResume } from "@/types/resume.types";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { DownloadPdfButton } from "@/components/resume/pdf/download-pdf-button";
 import { useDeleteResume } from "@/hooks/use-delete-resume";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Loader2, Plus, X, Trash2 } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface CertificationsFormProps {
   resume: IResume;
@@ -35,8 +20,6 @@ export function CertificationsForm({ resume, onUpdate }: CertificationsFormProps
   const [value, setValue] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const { deleteResume, deletingId } = useDeleteResume();
-  const deleting = deletingId === resume._id;
 
   const addEntry = () => {
     if (!value.trim()) return;
@@ -98,37 +81,6 @@ export function CertificationsForm({ resume, onUpdate }: CertificationsFormProps
       <Button onClick={onSave} disabled={saving} className="w-full">
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save & Finish"}
       </Button>
-
-      {saved && (
-        <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
-          <p className="text-sm font-medium">Your resume is ready 🎉</p>
-          <DownloadPdfButton resume={resume} />
-
-          <AlertDialog>
-            <AlertDialogTrigger className={cn(buttonVariants({ variant: "ghost" }), "w-full text-destructive hover:text-destructive")}>
-              <Trash2 className="h-4 w-4" /> Delete this resume
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete this resume?</AlertDialogTitle>
-                <AlertDialogDescription>This action can't be undone. This will permanently delete this resume.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  className={cn(buttonVariants({ variant: "outline", size: "sm" }), "text-destructive hover:text-destructive")}
-                  disabled={deleting}
-                  onClick={() => deleteResume(resume._id!)}
-                >
-                  {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      )}
     </div>
   );
 }
