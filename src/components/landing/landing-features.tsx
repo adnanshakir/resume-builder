@@ -1,18 +1,57 @@
 "use client";
 
-import { motion } from "motion/react";
-import { ArrowUpRight, FileText, Target, Download, ShieldCheck } from "lucide-react";
+import { FileText, Sparkles, Target, Download } from "lucide-react";
+import { motion, type Variants } from "motion/react";
+
+const steps = [
+  {
+    number: "01",
+    icon: FileText,
+    title: "Fill in the basics",
+    description: "Your target role, experience level, and skills — that's all it needs to get started.",
+  },
+  {
+    number: "02",
+    icon: Sparkles,
+    title: "AI writes every section",
+    description: "Summary, experience, projects, and skills — generated, editable, and yours to refine.",
+  },
+  {
+    number: "03",
+    icon: Target,
+    title: "Check your ATS score",
+    description: "Get real feedback on keyword match, clarity, and structure before you apply.",
+  },
+  {
+    number: "04",
+    icon: Download,
+    title: "Export a real PDF",
+    description: "A true vector PDF with selectable text, built to pass through ATS parsers.",
+  },
+];
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.25 },
+  },
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
 
 export function LandingFeatures() {
   return (
-    <section className="relative flex min-h-screen flex-col justify-center border-t px-6 py-24">
-      <div className="mx-auto w-full max-w-5xl space-y-16">
+    <section className="relative border-t px-6 py-28">
+      <div className="mx-auto w-full max-w-2xl">
         <motion.div
-          initial={{ opacity: 0, filter: "blur(8px)", y: 12 }}
-          whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="space-y-2"
+          className="mb-16 space-y-2 text-center"
         >
           <h2 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl">
             From blank page to finished resume.
@@ -20,116 +59,28 @@ export function LandingFeatures() {
           <p className="text-lg text-muted-foreground">No blinking cursor. Just answer a few prompts.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Large tile: AI writes every section */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="relative flex min-h-[320px] flex-col justify-between overflow-hidden rounded-3xl bg-amber-400 p-8 text-black sm:col-span-2"
-          >
-            <div className="space-y-2">
-              <h3 className="text-3xl font-bold sm:text-4xl">AI writes every section</h3>
-              <p className="max-w-md text-sm text-black/70">
-                Summary, experience bullets, project descriptions, and skills — generated, editable, and yours to refine.
-              </p>
-            </div>
-            <div className="flex items-end justify-between">
-              <div className="space-y-0.5">
-                <p className="text-xs font-medium text-black/60">Powered by</p>
-                <p className="text-xl font-bold">Gemini</p>
-              </div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-black/10">
-                <ArrowUpRight className="h-5 w-5" />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Fill in basics */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="flex min-h-[220px] flex-col justify-between rounded-3xl bg-teal-500 p-7 text-white"
-          >
-            <FileText className="h-7 w-7" />
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold">Fill in the basics</h3>
-              <p className="text-sm text-white/80">Your role, experience, and skills. That's it.</p>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
-              <ArrowUpRight className="h-4 w-4" />
-            </div>
-          </motion.div>
-
-          {/* ATS score */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-            className="flex min-h-[220px] flex-col justify-between rounded-3xl bg-pink-400 p-7 text-black"
-          >
-            <Target className="h-7 w-7" />
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold">Check your ATS score</h3>
-              <p className="text-sm text-black/70">Real feedback on keyword match and clarity.</p>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-black/10">
-              <ArrowUpRight className="h-4 w-4" />
-            </div>
-          </motion.div>
-
-          {/* You approve everything */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-            className="flex min-h-[220px] flex-col justify-between rounded-3xl border bg-muted/30 p-7"
-          >
-            <ShieldCheck className="h-7 w-7 text-primary" />
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold">You approve everything</h3>
-              <p className="text-sm text-muted-foreground">Nothing saves automatically — every line is yours to edit first.</p>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-              <ArrowUpRight className="h-4 w-4 text-primary" />
-            </div>
-          </motion.div>
-
-          {/* Export a real PDF */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-            className="relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl bg-neutral-900 p-7 text-white dark:bg-white dark:text-black"
-          >
-            <Download className="h-7 w-7" />
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold">Export a real PDF</h3>
-              <p className="text-sm opacity-70">Selectable text, built to pass real ATS parsers.</p>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 dark:bg-black/10">
-              <ArrowUpRight className="h-4 w-4" />
-            </div>
-          </motion.div>
-        </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="divide-y"
+        >
+          {steps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <motion.div key={step.number} variants={rowVariants} className="flex items-start gap-5 py-8">
+                <span className="w-6 shrink-0 text-sm font-medium text-muted-foreground/50">{step.number}</span>
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <div className="space-y-1">
+                  <h3 className="font-semibold">{step.title}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
-
-      {/* Blurred white mask transitioning into footer */}
-      <div
-        className="pointer-events-none absolute inset-x-0 -bottom-0 h-40"
-        style={{
-          background: "linear-gradient(to bottom, transparent, white)",
-          backdropFilter: "blur(20px)",
-          maskImage: "linear-gradient(to bottom, transparent, black)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black)",
-        }}
-      />
     </section>
   );
 }

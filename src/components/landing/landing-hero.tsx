@@ -15,25 +15,6 @@ const trustPoints = [
 export function LandingHero() {
   return (
     <section className="relative flex min-h-[calc(100vh-100px)] flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
-      {/* Animated gradient background */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <motion.div
-          animate={{ x: [0, 60, -30, 0], y: [0, -40, 30, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-1/4 top-1/4 h-[420px] w-[420px] rounded-full bg-primary/20 blur-[110px]"
-        />
-        <motion.div
-          animate={{ x: [0, -50, 40, 0], y: [0, 40, -20, 0] }}
-          transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute right-1/4 top-1/3 h-[380px] w-[380px] rounded-full bg-blue-500/15 blur-[110px]"
-        />
-        <motion.div
-          animate={{ x: [0, 30, -50, 0], y: [0, -30, 20, 0] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 left-1/3 h-[340px] w-[340px] rounded-full bg-purple-500/10 blur-[110px]"
-        />
-      </div>
-
       <motion.div
         initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
         whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
@@ -65,6 +46,17 @@ export function LandingHero() {
           ))}
         </div>
       </motion.div>
+
+      {/* Fade to dark, transitioning into the Features section below */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
+        style={{
+          background: "linear-gradient(to bottom, transparent, var(--background))",
+          backdropFilter: "blur(16px)",
+          maskImage: "linear-gradient(to bottom, transparent, black)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black)",
+        }}
+      />
     </section>
   );
 }

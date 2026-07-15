@@ -10,7 +10,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen w-full">
       <header className="sticky top-4 z-50 mx-auto w-full max-w-3xl px-4">
-        <div className="flex items-center justify-between rounded-full border bg-background/80 px-5 py-2.5 shadow-sm backdrop-blur-md">
+        <div className="flex items-center justify-between rounded-full border bg-background/95 px-5 py-2.5 shadow-sm backdrop-blur-xl">
           <Link href="/" className="text-sm font-semibold">
             Resume Builder
           </Link>

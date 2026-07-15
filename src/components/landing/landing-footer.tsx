@@ -9,7 +9,16 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export function LandingFooter() {
   return (
-    <footer className="relative flex min-h-[45vh] flex-col justify-between overflow-hidden border-t bg-white text-black dark:bg-white dark:text-black">
+    <footer className="relative flex min-h-[45vh] flex-col justify-between overflow-hidden bg-white text-black dark:bg-white dark:text-black rounded-t-[4rem]">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40"
+        style={{
+          background: "linear-gradient(to top, transparent, orange)",
+          backdropFilter: "blur(20px)",
+          maskImage: "linear-gradient(to top, transparent, red)",
+          WebkitMaskImage: "linear-gradient(to top, transparent, black)",
+        }}
+      />
       <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
         <motion.div
           initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
@@ -18,13 +27,8 @@ export function LandingFooter() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="max-w-lg space-y-6"
         >
-          <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">
-            Your next resume starts here.
-          </h2>
-          <Link
-            href="/auth/register"
-            className={cn(buttonVariants({ size: "lg" }), "bg-black px-8 text-base text-white hover:bg-black/90")}
-          >
+          <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">Your next resume starts here.</h2>
+          <Link href="/auth/register" className={cn(buttonVariants({ size: "lg" }), "bg-black px-8 text-base text-white hover:bg-black/90")}>
             Get started — it's free
           </Link>
         </motion.div>
