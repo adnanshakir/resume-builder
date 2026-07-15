@@ -16,6 +16,7 @@ import { ProjectsForm } from "@/components/resume/editor/projects-form";
 import { EducationForm } from "@/components/resume/editor/education-form";
 import { CertificationsForm } from "@/components/resume/editor/certifications-form";
 import { FinishStep } from "@/components/resume/editor/finish-step";
+import { LogoutButton } from "@/components/shared/logout-button";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight, LayoutDashboard } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -89,6 +90,7 @@ function ResumeEditor({ resumeId }: { resumeId: string }) {
             <div className="flex items-center gap-2">
               <SectionManager sectionOrder={sectionOrder} onChange={updateSectionOrder} />
               <ThemeToggle />
+              <LogoutButton />
             </div>
           </div>
 

@@ -5,17 +5,17 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 
 export function LandingFooter() {
   return (
-    <footer className="relative flex min-h-[45vh] flex-col justify-between overflow-hidden bg-white text-black dark:bg-white dark:text-black rounded-t-[4rem]">
+    <footer className="relative flex min-h-[45vh] flex-col justify-between overflow-hidden border-amber-200 bg-white text-black dark:bg-white dark:text-black rounded-t-[6rem]">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-40"
         style={{
-          background: "linear-gradient(to top, transparent, orange)",
+          background: "linear-gradient(to top, transparent, yellow)",
           backdropFilter: "blur(20px)",
-          maskImage: "linear-gradient(to top, transparent, red)",
+          maskImage: "linear-gradient(to top, transparent, black)",
           WebkitMaskImage: "linear-gradient(to top, transparent, black)",
         }}
       />
@@ -41,18 +41,18 @@ export function LandingFooter() {
             <span className="hidden sm:inline">·</span>
             <span>
               Built by{" "}
-              <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-black">
+              <a href="https://github.com/adnanshakir" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-black">
                 Adnan
               </a>
             </span>
           </div>
 
           <div className="flex items-center gap-4">
-            <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="text-black/40 hover:text-black">
+            <a href="https://github.com/adnanshakir" target="_blank" rel="noopener noreferrer" className="text-black/40 hover:text-black">
               <FaGithub className="h-4 w-4" />
             </a>
-            <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="text-black/40 hover:text-black">
-              <FaLinkedin className="h-4 w-4" />
+            <a href="https://x.com/adnanxshakir" target="_blank" rel="noopener noreferrer" className="text-black/40 hover:text-black">
+              <FaTwitter className="h-4 w-4" />
             </a>
           </div>
         </div>

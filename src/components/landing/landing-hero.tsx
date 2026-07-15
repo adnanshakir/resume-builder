@@ -14,7 +14,7 @@ const trustPoints = [
 
 export function LandingHero() {
   return (
-    <section className="relative flex min-h-[calc(100vh-100px)] flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
+    <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-center">
       <motion.div
         initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
         whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
@@ -27,8 +27,8 @@ export function LandingHero() {
         </h1>
 
         <p className="mx-auto max-w-xl text-balance text-lg text-muted-foreground">
-          Tell us your role and skills. AI drafts the summary, experience, and skills sections —
-          you stay in control, editing and approving every line before it's yours.
+          Tell us your role and skills. AI drafts the summary, experience, and skills sections — you stay in control, editing and approving every line before
+          it's yours.
         </p>
 
         <div className="flex justify-center pt-2">
@@ -46,17 +46,6 @@ export function LandingHero() {
           ))}
         </div>
       </motion.div>
-
-      {/* Fade to dark, transitioning into the Features section below */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
-        style={{
-          background: "linear-gradient(to bottom, transparent, var(--background))",
-          backdropFilter: "blur(16px)",
-          maskImage: "linear-gradient(to bottom, transparent, black)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black)",
-        }}
-      />
     </section>
   );
 }

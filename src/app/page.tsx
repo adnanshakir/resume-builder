@@ -15,7 +15,7 @@ export default function LandingPage() {
             Resume Builder
           </Link>
           <div className="flex items-center gap-2">
-            <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+            <Link href="/auth/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
               Log in
             </Link>
             <ThemeToggle />
