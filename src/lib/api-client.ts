@@ -12,8 +12,14 @@ export async function apiRequest<T>(
   } catch (err) {
     const axiosErr = err as AxiosError<ApiResponse<T>>;
 
-    if (axiosErr.response?.status === 401 && typeof window !== "undefined") {
-      if (!window.location.pathname.startsWith("/login")) {
+    const isAuthEndpoint = url.startsWith("/api/auth/");
+
+    if (axiosErr.response?.status === 401 && !isAuthEndpoint && typeof window !== "undefined") {
+      const onAuthPage =
+        window.location.pathname.startsWith("/auth/login") ||
+        window.location.pathname.startsWith("/auth/register");
+
+      if (!onAuthPage) {
         window.location.href = "/auth/login";
       }
     }

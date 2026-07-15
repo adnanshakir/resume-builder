@@ -163,7 +163,7 @@ export function ResumePreview({ resume, loading, sectionOrder }: ResumePreviewPr
         colorScheme: "light",
         forcedColorAdjust: "none",
       }}
-      className="h-280.75 w-198.5 overflow-hidden p-12"
+      className="h-280.75 w-198.5 overflow-hidden border-2 p-12"
     >
       <div className="space-y-1 pb-4 text-center">
         <h1 className="text-2xl font-bold">{personalInfo.fullname}</h1>
