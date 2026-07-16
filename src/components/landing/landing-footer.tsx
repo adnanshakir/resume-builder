@@ -1,4 +1,3 @@
-// components/landing/landing-footer.tsx
 "use client";
 
 import { motion } from "motion/react";

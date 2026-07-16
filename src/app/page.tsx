@@ -5,7 +5,7 @@ import { Nav } from "@/components/shared/nav";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full select-none">
       <Nav />
       <LandingHero />
       <LandingFeatures />

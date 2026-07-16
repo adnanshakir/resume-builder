@@ -70,7 +70,7 @@ export function LandingFeatures() {
             const Icon = step.icon;
             return (
               <motion.div key={step.number} variants={rowVariants} className="flex items-start gap-5 py-8">
-                <span className="w-6 shrink-0 text-sm font-medium text-muted-foreground/50">{step.number}</span>
+                <span className="w-6 shrink-0 text-xl font-mono font-bold text-muted-foreground/50">{step.number}</span>
                 <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                 <div className="space-y-1">
                   <h3 className="font-semibold">{step.title}</h3>
